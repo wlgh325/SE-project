@@ -3,10 +3,11 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
+import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -123,10 +124,13 @@ public class NotePad
 		//파일 열기
 		fileMenu.getItem(0).addActionListener(new ActionListener()
 		{
-
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+				Load load = new Load();
+				load.Load_file();
+				print_file(load.info.get_dir(), load.info.get_filename());
+				
 				if(NotePad.this.textArea.getText().length() > 0)
 				{
 					if( JOptionPane.showConfirmDialog(NotePad.this.jFrame, "작성 중인 내용을 취소합니다.") == 0 )
@@ -335,6 +339,24 @@ public class NotePad
 			
 		});
 
+	}
+	
+	public void print_file(String dir, String file_name){
+		String temp1; // Schedult.txt파일 한줄 씩 읽어서 임시로 저장하기
+		Scanner input = null; // input 선언
+		File file = new File(dir + file_name);
+		
+		try {
+			input = new Scanner(file);
+		} catch (IOException e) {
+			// 예외 발생을 출력문으로 알리고, 더 이상의 프로그램 진행을 포기하도록 Java 문장 추가
+			System.out.println("Unknown File");
+		}
+		while(input.hasNext()){
+			temp1 = input.nextLine();
+			NotePad.this.textArea.append(temp1);
+			NotePad.this.textArea.append("\n");
+		}
 	}
 
 //	public static void main(String[] args)
