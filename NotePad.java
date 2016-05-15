@@ -53,12 +53,16 @@ public class NotePad
 		//p1.add(textArea2);
 		
 		// 파일 메뉴 생성
-		fileMenu.add(new JMenuItem("File Open"));
-		fileMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('O', InputEvent.ALT_MASK));
-				
+		fileMenu.add(new JMenuItem("Left File Open"));
+		fileMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('L', InputEvent.ALT_MASK));
+		
+		fileMenu.addSeparator(); //구분선 추가
+		fileMenu.add(new JMenuItem("Right File Open"));
+		fileMenu.getItem(2).setAccelerator(KeyStroke.getKeyStroke('R', InputEvent.ALT_MASK));
+		
 		fileMenu.addSeparator(); //구분선 추가
 		fileMenu.add(new JMenuItem("Exit"));
-		fileMenu.getItem(2).setAccelerator(KeyStroke.getKeyStroke('X', InputEvent.ALT_MASK));
+		fileMenu.getItem(4).setAccelerator(KeyStroke.getKeyStroke('X', InputEvent.ALT_MASK));
 		
 		// 편집 메뉴 생성
 		editMenu.add(new JMenuItem("Start Edit"));
@@ -121,7 +125,7 @@ public class NotePad
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		
-		//파일 열기
+		//왼쪽 파일 열기
 		fileMenu.getItem(0).addActionListener(new ActionListener()
 		{
 			@Override
@@ -129,27 +133,67 @@ public class NotePad
 			{
 				Load load = new Load();
 				load.Load_file();
-				print_file(load.info.get_dir(), load.info.get_filename());
-				
-				if(NotePad.this.textArea.getText().length() > 0)
-				{
-					if( JOptionPane.showConfirmDialog(NotePad.this.jFrame, "작성 중인 내용을 취소합니다.") == 0 )
-					{
-						NotePad.this.textArea.setText(null);
-						NotePad.this.jFrame.setTitle("제목없음"); //타이틀바 초기화
-						NotePad.this.textArea.setCaretPosition(0); //커서 위치 처음으로!
-					}
-				}
-				else
-				{
-					NotePad.this.textArea.setText(null);
-					NotePad.this.jFrame.setTitle("제목없음"); //타이틀바 초기화
-					NotePad.this.textArea.setCaretPosition(0); //커서 위치 처음으로!
-				}	  
+				print_Leftfile(load.info.get_dir(), load.info.get_filename());	  
  			}			
 		});
 		
+		//오른쪽 파일 열기
+		fileMenu.getItem(2).addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e){
+				Load load = new Load();
+				load.Load_file();
+				print_Rightfile(load.info.get_dir(), load.info.get_filename());
+			}
+		});
 		
+		/* Editmenu Listener */
+		editMenu.getItem(2).addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				//저장 다이얼로그 띄우기
+				FileDialog save = new FileDialog(NotePad.this.jFrame, "Save mode", FileDialog.SAVE);
+				save.setVisible(true); 
+				
+				
+				if(save.getFile() != null) //파일을 선택했을 경우에만 저장
+				{
+					FileWriter fileWriter = null;
+					BufferedWriter bufferedWriter = null;
+					
+					try
+					{
+						fileWriter = new FileWriter(save.getDirectory() + save.getFile());
+						bufferedWriter = new BufferedWriter(fileWriter);
+						
+						bufferedWriter.write(NotePad.this.textArea.getText());	
+					}
+					catch (Exception fileReadError)
+					{
+						System.out.println("오류" + fileReadError);
+					}
+					finally
+					{
+						try
+						{
+							bufferedWriter.close();
+						}
+						catch (Exception fileCloseError)
+						{
+							System.out.println("파일 닫기 오류" + fileCloseError);
+						}
+					}
+					
+					NotePad.this.jFrame.setTitle(save.getFile()); //타이틀바에 파일명 나타내기
+				}
+			}
+
+		});
+		
+		
+		/*
 		//파일 열기 이벤트 추가
 		fileMenu.getItem(1).addActionListener(new ActionListener()
 		{
@@ -211,56 +255,9 @@ public class NotePad
 			}
 			
 		});
+		*/
 		
-		//파일 저장 이벤트 추가
-		fileMenu.getItem(2).addActionListener(new ActionListener()
-		{
-
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				//저장 다이얼로그 띄우기
-				FileDialog save = new FileDialog(NotePad.this.jFrame, "저장모드", FileDialog.SAVE);
-				save.setVisible(true); 
-				
-				
-				if(save.getFile() != null) //파일을 선택했을 경우에만 저장
-				{
-					FileWriter fileWriter = null;
-					BufferedWriter bufferedWriter = null;
-					
-					try
-					{
-						
-						fileWriter = new FileWriter(save.getDirectory() + save.getFile());
-						bufferedWriter = new BufferedWriter(fileWriter);
-						
-						bufferedWriter.write(NotePad.this.textArea.getText());
-						
-					}
-					catch (Exception fileReadError)
-					{
-						System.out.println("오류" + fileReadError);
-					}
-					finally
-					{
-						try
-						{
-							bufferedWriter.close();
-						}
-						catch (Exception fileCloseError)
-						{
-							System.out.println("파일 닫기 오류" + fileCloseError);
-						}
-					}
-					
-					NotePad.this.jFrame.setTitle(save.getFile()); //타이틀바에 파일명 나타내기
-				}
-			}
-			
-		});
-		
-		//종료 이벤트 추가
+				//종료 이벤트 추가
 		fileMenu.getItem(4).addActionListener(new ActionListener()
 		{
 
@@ -291,7 +288,7 @@ public class NotePad
 			public void actionPerformed(ActionEvent e)
 			{
 				//버전 출력
-				JOptionPane.showMessageDialog(NotePad.this.jFrame, "Version 0.0.1");
+				JOptionPane.showMessageDialog(NotePad.this.jFrame, "Version 0.0.2");
 			}
 			
 		});
@@ -341,7 +338,7 @@ public class NotePad
 
 	}
 	
-	public void print_file(String dir, String file_name){
+	public void print_Leftfile(String dir, String file_name){
 		String temp1; // Schedult.txt파일 한줄 씩 읽어서 임시로 저장하기
 		Scanner input = null; // input 선언
 		File file = new File(dir + file_name);
@@ -359,9 +356,89 @@ public class NotePad
 		}
 	}
 
-//	public static void main(String[] args)
-//	{
-		// 실행
-//		new NotePad();
-//	}
+	public void print_Rightfile(String dir, String file_name){
+		String temp1; // Schedult.txt파일 한줄 씩 읽어서 임시로 저장하기
+		Scanner input = null; // input 선언
+		File file = new File(dir + file_name);
+		
+		try {
+			input = new Scanner(file);
+		} catch (IOException e) {
+			// 예외 발생을 출력문으로 알리고, 더 이상의 프로그램 진행을 포기하도록 Java 문장 추가
+			System.out.println("Unknown File");
+		}
+		while(input.hasNext()){
+			temp1 = input.nextLine();
+			NotePad.this.textArea2.append(temp1);
+			NotePad.this.textArea2.append("\n");
+		}
+	}
+
+	/*
+	if(NotePad.this.textArea.getText().length() > 0)
+	{
+		if( JOptionPane.showConfirmDialog(NotePad.this.jFrame, "작성 중인 내용을 취소합니다.") == 0 )
+		{
+			NotePad.this.textArea.setText(null);
+			NotePad.this.jFrame.setTitle("제목없음"); //타이틀바 초기화
+			NotePad.this.textArea.setCaretPosition(0); //커서 위치 처음으로!
+		}
+	}
+	else
+	{
+		NotePad.this.textArea.setText(null);
+		NotePad.this.jFrame.setTitle("제목없음"); //타이틀바 초기화
+		NotePad.this.textArea.setCaretPosition(0); //커서 위치 처음으로!
+	}
+	*/
+	/*
+	//파일 저장 이벤트 추가
+	fileMenu.getItem(2).addActionListener(new ActionListener()
+	{
+
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			//저장 다이얼로그 띄우기
+			FileDialog save = new FileDialog(NotePad.this.jFrame, "저장모드", FileDialog.SAVE);
+			save.setVisible(true); 
+			
+			
+			if(save.getFile() != null) //파일을 선택했을 경우에만 저장
+			{
+				FileWriter fileWriter = null;
+				BufferedWriter bufferedWriter = null;
+				
+				try
+				{
+					
+					fileWriter = new FileWriter(save.getDirectory() + save.getFile());
+					bufferedWriter = new BufferedWriter(fileWriter);
+					
+					bufferedWriter.write(NotePad.this.textArea.getText());
+					
+				}
+				catch (Exception fileReadError)
+				{
+					System.out.println("오류" + fileReadError);
+				}
+				finally
+				{
+					try
+					{
+						bufferedWriter.close();
+					}
+					catch (Exception fileCloseError)
+					{
+						System.out.println("파일 닫기 오류" + fileCloseError);
+					}
+				}
+				
+				NotePad.this.jFrame.setTitle(save.getFile()); //타이틀바에 파일명 나타내기
+			}
+		}
+		
+	});
+	*/
+
 }
