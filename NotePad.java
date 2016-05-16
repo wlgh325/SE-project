@@ -30,8 +30,8 @@ public class NotePad
 	// Swing에서의 텍스트 영역.. 스크롤바가 존재하지 않는다.
 	JPanel p1 = new JPanel();	
 	
-	JTextArea textArea = new JTextArea("", 0, 0);// 스크롤바 없음
-	JTextArea textArea2 = new JTextArea("", 0,0);
+	static JTextArea textArea = new JTextArea("", 0, 0);// 스크롤바 없음
+	static JTextArea textArea2 = new JTextArea("", 0,0);
 	
 
 	// Swing에서 스크롤바를 넣기 위해 아래와 같이 사용한다.
@@ -128,6 +128,7 @@ public class NotePad
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		
+		/* fileMenu Listener */
 		//왼쪽 파일 열기
 		fileMenu.getItem(0).addActionListener(new ActionListener()
 		{
@@ -150,91 +151,29 @@ public class NotePad
 			}
 		});
 		
+		
 		/* Editmenu Listener */
+		
+		//왼쪽 파일 저장
 		editMenu.getItem(2).addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				//저장 다이얼로그 띄우기
-				FileDialog save = new FileDialog(NotePad.this.jFrame, "Save mode", FileDialog.SAVE);
-				save.setVisible(true); 
-				
-				
-				if(save.getFile() != null) //파일을 선택했을 경우에만 저장
-				{
-					FileWriter fileWriter = null;
-					BufferedWriter bufferedWriter = null;
-					
-					try
-					{
-						fileWriter = new FileWriter(save.getDirectory() + save.getFile());
-						bufferedWriter = new BufferedWriter(fileWriter);
-						
-						bufferedWriter.write(NotePad.this.textArea.getText());	
-					}
-					catch (Exception fileReadError)
-					{
-						System.out.println("오류" + fileReadError);
-					}
-					finally
-					{
-						try
-						{
-							bufferedWriter.close();
-						}
-						catch (Exception fileCloseError)
-						{
-							System.out.println("파일 닫기 오류" + fileCloseError);
-						}
-					}
-					
-					NotePad.this.jFrame.setTitle(save.getFile()); //타이틀바에 파일명 나타내기
-				}
+				Save save = new Save();
+				save.LeftFileSave();
 			}
-
+				 
 		});
 		
+		//오른쪽 파일 저장
 		editMenu.getItem(4).addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				//저장 다이얼로그 띄우기
-				FileDialog save = new FileDialog(NotePad.this.jFrame, "Save mode", FileDialog.SAVE);
-				save.setVisible(true); 
-				
-				
-				if(save.getFile() != null) //파일을 선택했을 경우에만 저장
-				{
-					FileWriter fileWriter = null;
-					BufferedWriter bufferedWriter = null;
-					
-					try
-					{
-						fileWriter = new FileWriter(save.getDirectory() + save.getFile());
-						bufferedWriter = new BufferedWriter(fileWriter);
-						
-						bufferedWriter.write(NotePad.this.textArea2.getText());	
-					}
-					catch (Exception fileReadError)
-					{
-						System.out.println("오류" + fileReadError);
-					}
-					finally
-					{
-						try
-						{
-							bufferedWriter.close();
-						}
-						catch (Exception fileCloseError)
-						{
-							System.out.println("파일 닫기 오류" + fileCloseError);
-						}
-					}
-					
-					NotePad.this.jFrame.setTitle(save.getFile()); //타이틀바에 파일명 나타내기
-				}
+				Save save = new Save();
+				save.RightFileSave();
 			}
 
 		});
