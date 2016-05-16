@@ -52,6 +52,10 @@ public class NotePad
 		//p1.add(textArea);
 		//p1.add(textArea2);
 		
+		//처음에 수정 불가능
+		textArea.setEditable(false);
+		textArea2.setEditable(false);
+		
 		// 파일 메뉴 생성
 		fileMenu.add(new JMenuItem("Left File Open"));
 		fileMenu.getItem(0).setAccelerator(KeyStroke.getKeyStroke('L', InputEvent.ALT_MASK));
@@ -130,53 +134,40 @@ public class NotePad
 		
 		/* fileMenu Listener */
 		//왼쪽 파일 열기
-		fileMenu.getItem(0).addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				Load load = new Load();
-				load.Load_file();
-				print_Leftfile(load.info.get_dir(), load.info.get_filename());	  
- 			}			
-		});
-		
+		fileMenu.getItem(0).addActionListener(new LeftFileLoadListenerClass());
 		//오른쪽 파일 열기
-		fileMenu.getItem(2).addActionListener(new ActionListener()
-		{
+		fileMenu.getItem(2).addActionListener(new RightFileLoadListenerClass());  		
+		//프로그램 종료
+		fileMenu.getItem(4).addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				Load load = new Load();
-				load.Load_file();
-				print_Rightfile(load.info.get_dir(), load.info.get_filename());
+				//작성중인 내용이 있으면 종료 전 알림!
+				if(NotePad.textArea.getText().length() > 0)
+				{
+					if( JOptionPane.showConfirmDialog(NotePad.this.jFrame, "작성 중인 내용을 취소하고 종료합니다.") == 0 )
+					{
+						System.exit(0);
+					}
+				}
+				else
+				{
+					System.exit(0);
+				}
 			}
-		});
+		});  
 		
 		
 		/* Editmenu Listener */
-		
+		editMenu.getItem(0).addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				textArea.setEditable(true);
+				textArea2.setEditable(true);
+			}
+		});
 		//왼쪽 파일 저장
-		editMenu.getItem(2).addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				Save save = new Save();
-				save.LeftFileSave();
-			}
-				 
-		});
-		
+		editMenu.getItem(2).addActionListener(new LeftFileSaveListenerClass());
 		//오른쪽 파일 저장
-		editMenu.getItem(4).addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				Save save = new Save();
-				save.RightFileSave();
-			}
-
-		});
+		editMenu.getItem(4).addActionListener(new RightFileSaveListenerClass());
+		
 		/*
 		//파일 열기 이벤트 추가
 		fileMenu.getItem(1).addActionListener(new ActionListener()
@@ -241,29 +232,6 @@ public class NotePad
 		});
 		*/
 		
-				//종료 이벤트 추가
-		fileMenu.getItem(4).addActionListener(new ActionListener()
-		{
-
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				//작성중인 내용이 있으면 종료 전 알림!
-				if(NotePad.this.textArea.getText().length() > 0)
-				{
-					if( JOptionPane.showConfirmDialog(NotePad.this.jFrame, "작성 중인 내용을 취소하고 종료합니다.") == 0 )
-					{
-						System.exit(0);
-					}
-				}
-				else
-				{
-					System.exit(0);
-				}
-			}
-			
-		});
-		
 		//버전 이벤트 추가
 		helpMenu.getItem(0).addActionListener(new ActionListener()
 		{
@@ -320,42 +288,6 @@ public class NotePad
 			
 		});
 
-	}
-	
-	public void print_Leftfile(String dir, String file_name){
-		String temp1; // Schedult.txt파일 한줄 씩 읽어서 임시로 저장하기
-		Scanner input = null; // input 선언
-		File file = new File(dir + file_name);
-		
-		try {
-			input = new Scanner(file);
-		} catch (IOException e) {
-			// 예외 발생을 출력문으로 알리고, 더 이상의 프로그램 진행을 포기하도록 Java 문장 추가
-			System.out.println("Unknown File");
-		}
-		while(input.hasNext()){
-			temp1 = input.nextLine();
-			NotePad.this.textArea.append(temp1);
-			NotePad.this.textArea.append("\n");
-		}
-	}
-
-	public void print_Rightfile(String dir, String file_name){
-		String temp1; // Schedult.txt파일 한줄 씩 읽어서 임시로 저장하기
-		Scanner input = null; // input 선언
-		File file = new File(dir + file_name);
-		
-		try {
-			input = new Scanner(file);
-		} catch (IOException e) {
-			// 예외 발생을 출력문으로 알리고, 더 이상의 프로그램 진행을 포기하도록 Java 문장 추가
-			System.out.println("Unknown File");
-		}
-		while(input.hasNext()){
-			temp1 = input.nextLine();
-			NotePad.this.textArea2.append(temp1);
-			NotePad.this.textArea2.append("\n");
-		}
 	}
 
 	/*
@@ -426,3 +358,6 @@ public class NotePad
 	*/
 
 }
+
+	
+	

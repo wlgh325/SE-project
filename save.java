@@ -1,3 +1,6 @@
+import java.awt.FileDialog;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -6,42 +9,74 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class Save {
-	JTextField text;
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		Save save = new Save();
+class LeftFileSaveListenerClass implements ActionListener{
+	JFrame frame;
+	public void actionPerformed(ActionEvent e){
+		// 저장 다이얼로그 띄우기
+		frame = new JFrame();
+				FileDialog save = new FileDialog(this.frame, "Save mode",
+						FileDialog.SAVE);
+				save.setVisible(true);
+
+				if (save.getFile() != null) // 파일을 선택했을 경우에만 저장
+				{
+					FileWriter fileWriter = null;
+					BufferedWriter bufferedWriter = null;
+
+					try {
+						fileWriter = new FileWriter(save.getDirectory()
+								+ save.getFile());
+						bufferedWriter = new BufferedWriter(fileWriter);
+
+						bufferedWriter.write(NotePad.textArea.getText());
+					} catch (Exception fileReadError) {
+						System.out.println("오류" + fileReadError);
+					} finally {
+						try {
+							bufferedWriter.close();
+						} catch (Exception fileCloseError) {
+							System.out.println("파일 닫기 오류" + fileCloseError);
+						}
+					}
+
+					this.frame.setTitle(save.getFile()); // 타이틀바에 파일명 나타내기
+				}
+			}
+
 	}
 
-	Save() {
-		JFrame frame = new JFrame();
-		JPanel panel = new JPanel();
-		Load load = new Load();	//save전에 load된 파일이 있다고 가정하기 위해서 load를 new 해준다.
-		load.Load_file();
-		
-		text = new JTextField("example",30);
-		text.setEditable(true);
-		
-		panel.add(text);
-		frame.add(panel);
-		frame.setSize(500, 100);
-		frame.setVisible(true);
-		saveFile(load.get_dir(), load.get_filename());
-	}
+class RightFileSaveListenerClass implements ActionListener{
+	JFrame frame;
+	public void actionPerformed(ActionEvent e){
+		// 저장 다이얼로그 띄우기
+		frame = new JFrame();
+				FileDialog save = new FileDialog(this.frame, "Save mode",
+						FileDialog.SAVE);
+				save.setVisible(true);
 
-	public void saveFile(String dir, String file_name) {
-		
-		try{
-			FileWriter fw = new FileWriter(dir + file_name);
-			BufferedWriter bw = new BufferedWriter(fw);
-			
-			bw.write(text.getText());	//textfiled에 있는 example을 파일에 저장
-			bw.newLine();
-			bw.close();
-		}
-		catch(IOException e){
-			System.out.println(e);
-		}
-	}
+				if (save.getFile() != null) // 파일을 선택했을 경우에만 저장
+				{
+					FileWriter fileWriter = null;
+					BufferedWriter bufferedWriter = null;
 
-}
+					try {
+						fileWriter = new FileWriter(save.getDirectory()
+								+ save.getFile());
+						bufferedWriter = new BufferedWriter(fileWriter);
+
+						bufferedWriter.write(NotePad.textArea2.getText());
+					} catch (Exception fileReadError) {
+						System.out.println("오류" + fileReadError);
+					} finally {
+						try {
+							bufferedWriter.close();
+						} catch (Exception fileCloseError) {
+							System.out.println("파일 닫기 오류" + fileCloseError);
+						}
+					}
+
+					this.frame.setTitle(save.getFile()); // 타이틀바에 파일명 나타내기
+				}
+			}
+
+	}
