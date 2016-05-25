@@ -1,17 +1,21 @@
-import java.io.IOException;
+import javax.swing.JFrame;
 
 
-public class Main {
+public class main {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
+		LFileModel LFile_model = new LFileModel();
+		RFileModel RFile_model = new RFileModel();
+		NotePad gui = new NotePad(LFile_model, RFile_model);
 		
-		GetFile get = new GetFile();
+		// swing에만 있는 X버튼 클릭시 종료
+		gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		for(int i=0 ; i<get.get_C_file1().length;i++){
-			System.out.println(get.get_C_file1()[i]);
-		}
-		//ComputeLCS LCS = new ComputeLCS();
-	
-		}
+		// 프레임 크기 및 보이기 설정	
+		gui.setSize(1000, 700);
+		gui.setLocation(160, 25);
+		gui.setVisible(true);
 
+
+	}
 }
