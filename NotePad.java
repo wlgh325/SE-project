@@ -3,7 +3,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -11,9 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 
-public class NotePad extends JFrame implements Observer{
-
-		
+public class NotePad extends JFrame{
 		//private Observable observable;
 		
 		private JPanel p1;	
@@ -72,10 +69,5 @@ public class NotePad extends JFrame implements Observer{
 			});
 		}
 
-	@Override
-	public void update(Observable o, Object arg) {
-		if(o instanceof LFileModel || o instanceof RFileModel){
-		}
-	}
 }
 

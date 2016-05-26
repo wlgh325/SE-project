@@ -76,9 +76,7 @@ public class Load_Left_Controller extends JFrame implements ActionListener {
 			// 예외 발생을 출력문으로 알리고, 더 이상의 프로그램 진행을 포기하도록 Java 문장 추가
 			System.out.println("Unknown File");
 		}
-		System.out.println(model.getName());
 		model.setInfo(input);
-		System.out.println(model.getInfo());
 	}
 	
 }

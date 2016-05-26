@@ -41,6 +41,7 @@ public class LTextView extends JPanel implements Observer{
 		
 		/* action listener */
 		LeftFile_open.addActionListener(new Load_Left_Controller( (LFileModel)observable) );
+		//LeftFile_save.addActionListener(new Save_Left_Controller());
 		edit.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				Left_textArea.setEditable(true);
@@ -62,4 +63,9 @@ public class LTextView extends JPanel implements Observer{
 			Left_textArea.append("\n");
 		}
 	}
+	
+	public JTextArea getTextarea(){
+		return Left_textArea;
+	}
+	
 }
