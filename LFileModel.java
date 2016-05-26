@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Observable;
+import java.util.Scanner;
 
 
 public class LFileModel extends Observable{
@@ -7,14 +8,17 @@ public class LFileModel extends Observable{
 	private String dir, file_name;
 	private int length;
 	private ArrayList<String> info;
+	private Scanner input;
 	
 	LFileModel(){
-		info = new ArrayList<String>();
+		//info = new ArrayList<String>();
+		input = null;
 	}
 	
 	/* set method */
 	public void setLength(int length){
 		this.length = length;
+		changedValue();
 	}
 	
 	public void setName(String file_name){
@@ -25,8 +29,9 @@ public class LFileModel extends Observable{
 		this.dir = dir;
 	}
 	
-	public void setInfo(String info){
-		this.info.add(info);
+	public void setInfo(Scanner input){
+		this.input = input;
+		changedValue();
 	}
 	
 	/* get method */
@@ -41,7 +46,13 @@ public class LFileModel extends Observable{
 		return this.dir;
 	}
 	
-	public ArrayList<String> getInfo(){
-		return this.info;
+	public Scanner getInfo(){
+		return this.input;
 	}
+	
+	public void changedValue() {
+        setChanged();
+        notifyObservers();
+      
+    }
 }

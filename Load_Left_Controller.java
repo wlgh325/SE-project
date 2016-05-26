@@ -31,11 +31,15 @@ class MyFilenameFilter implements FilenameFilter{
 public class Load_Left_Controller extends JFrame implements ActionListener {
 	LFileModel model;
 	
+	//constructor
+	Load_Left_Controller(LFileModel model){
+		this.model = model;
+	}
+	
 	public void LFileLoad(){ //open할 파일의 위치와 파일 명 확인
 			// 파일 저장 창 생성
 			FileDialog dialog = new FileDialog(this, "Load mode", FileDialog.LOAD);
-			MyFilenameFilter filter = new MyFilenameFilter();
-			model = new LFileModel();
+			MyFilenameFilter filter = new MyFilenameFilter();		
 			boolean check = true;
 			
 			while(check){
@@ -46,7 +50,6 @@ public class Load_Left_Controller extends JFrame implements ActionListener {
 				if(filter.accept(new File(selectedFile), selectedFile))
 				{
 					model.setDirectory( dialog.getDirectory() );
-					model.notifyObservers();
 					model.setName( dialog.getFile());
 					check = false;
 				}
@@ -73,10 +76,8 @@ public class Load_Left_Controller extends JFrame implements ActionListener {
 			// 예외 발생을 출력문으로 알리고, 더 이상의 프로그램 진행을 포기하도록 Java 문장 추가
 			System.out.println("Unknown File");
 		}
-		while(input.hasNext()){
-			temp1 = input.nextLine();
-			model.setInfo(temp1);
-		}
+		System.out.println(model.getName());
+		model.setInfo(input);
 		System.out.println(model.getInfo());
 	}
 	
